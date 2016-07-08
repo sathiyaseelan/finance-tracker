@@ -21,6 +21,20 @@
         <strong>Symbol:</strong> <%= @stock.ticker %>
         <strong>Name:</strong> <%= @stock.name %>
         <strong>Price:</strong> <%= @stock.price %>
+        <% if current_user.can_add_stock?(@stock.ticker) %>
+            <%= link_to 'Add to Portfolio', user_stocks_path(user: current_user,
+            stock_ticker: @stock.ticker, stock_id: @stock_id ? @stock_id : ''),
+             method: :post, class: "btn btn-xs btn-success" %>
+        <% else %>
+            <span class="label label-default">You cannot add stocks because
+                <% if current_user.under_stock_limit? %>
+                    the stock is already in your portfolio.
+                <% else %>
+                    you've reached the limit.
+                <% end %>
+            </span>
+        <% end %>
+        
     </div>
 <% end %>
 <div id="stock-lookup-errors" style="display: none;" class="col-md-8 col-md-offset-1 alert alert-danger"></div>
